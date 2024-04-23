@@ -167,10 +167,9 @@ You can use the MDCB connection details included in the installation output, to 
 For the complete installation guide and configuration options, please see [Tyk Control Plane Helm Chart]({{<ref "product-stack/tyk-charts/tyk-control-plane-chart">}}).
 
 ## Configuration
+If you install MDCB component with package, modify your `/opt/tyk-sink/tyk_sink.conf` file as follows:
 
 ### Configuration Example
-Once installed, modify your `/opt/tyk-sink/tyk_sink.conf` file as follows:
-
 ```json
 {
   "listen_port": 9091,
