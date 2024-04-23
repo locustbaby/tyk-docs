@@ -13,6 +13,12 @@ aliases:
 
 ## Introduction
 The [Tyk Control Plane]({{< ref "tyk-multi-data-centre/mdcb-components.md#control-plane" >}}) will contain all the standard components of a standard Self-Managed installation with the addition of one additional component: the Multi Data Centre Bridge (MDCB).
+
+## Installing MDCB Component with package
+The MDCB component must be able to connect to Redis and MongoDB/PostgreSQL directly from within the Control Plane deployment. It does not require access to the Tyk Gateway(s) or Dashboard application.
+
+The MDCB component will however, by default, expose an RPC service on port 9091, to which the Tyk Data Plane (Worker gateway(s)) data centres will need connectivity.
+
 ### Prerequisites
 We will assume that your account manager has provided you with a valid MDCB and Dashboard License and the command to enable you to download the MDCB package.
 We will assume that the following components are up and running in your Controller DC:
@@ -28,11 +34,6 @@ We will assume that the following components are up and running in your Controll
 
 When using SQL rather than MongoDB in a production environment, we only support PostgreSQL.
 {{< /note >}}
-
-## MDCB Component Installation
-The MDCB component must be able to connect to Redis and MongoDB/PostgreSQL directly from within the Control Plane deployment. It does not require access to the Tyk Gateway(s) or Dashboard application.
-
-The MDCB component will however, by default, expose an RPC service on port 9091, to which the Tyk Data Plane (Worker gateway(s)) data centres will need connectivity.
 
 To download the relevant MDCB package from PackageCloud:
 
@@ -59,11 +60,112 @@ Or
 ```curl
 sudo yum install tyk-sink
 ```
+
 ## Installing in a Kubernetes Cluster with our Helm Chart
 
-Currently [Tyk Self Managed Helm chart](https://artifacthub.io/packages/helm/tyk-helm/tyk-pro) deploys a Tyk API management control plane. This control plane is for both a single data centre API management (without the MDCB component) and a multi data centre API management from a **single Dashboard** (with the MDCB component).
+The [Tyk Control Plane]({{<ref "product-stack/tyk-charts/tyk-control-plane-chart">}}) helm chart is pre-configured to install Tyk control plane
+for multi data centre API management from a single Dashboard with the MDCB component.
 
-To deploy the MDCB component in your control plane, set `mdcb.enabled` in your [values.yaml](https://github.com/TykTechnologies/tyk-helm-chart/blob/82e9fd41dfe40029a9359a4babe445cbb29a0bd8/tyk-pro/values.yaml#L97) to `true` (or from command line `--set mdcb.enabled=true`).
+### Prerequisites
+Before installation, you need to prepare the followings:
+- [Kubernetes 1.19+](https://kubernetes.io/docs/setup/)
+- [Helm 3+](https://helm.sh/docs/intro/install/)
+- MDCB and Dashboard license
+
+### Quick Start
+
+**1. Setup required credentials**
+
+First, you need to provide Tyk Dashboard and MDCB license, admin email and password, and API keys. We recommend to store them in secrets.
+
+```bash
+NAMESPACE=tyk-cp
+
+API_SECRET=changeit
+ADMIN_KEY=changeit
+ADMIN_EMAIL=admin@default.com
+ADMIN_PASSWORD=changeit
+DASHBOARD_LICENSE=changeit
+MDCB_LICENSE=changeit
+
+kubectl create namespace $NAMESPACE
+
+kubectl create secret generic my-secrets -n $NAMESPACE \
+    --from-literal=APISecret=$API_SECRET \
+    --from-literal=AdminSecret=$ADMIN_KEY \
+    --from-literal=DashLicense=$DASHBOARD_LICENSE
+
+kubectl create secret generic mdcb-secrets -n $NAMESPACE \
+    --from-literal=MDCBLicense=$MDCB_LICENSE
+
+kubectl create secret generic admin-secrets -n $NAMESPACE \
+    --from-literal=adminUserFirstName=Admin \
+    --from-literal=adminUserLastName=User \
+    --from-literal=adminUserEmail=$ADMIN_EMAIL \
+    --from-literal=adminUserPassword=$ADMIN_PASSWORD
+```
+
+**2. Install Redis (if you don't already have Redis installed)**
+
+If you do not already have Redis installed, you may use these charts provided by Bitnami.
+
+```bash
+helm upgrade tyk-redis oci://registry-1.docker.io/bitnamicharts/redis -n $NAMESPACE --install
+```
+Follow the notes from the installation output to get connection details and password. The DNS name of your Redis as set by Bitnami is `tyk-redis-master.tyk.svc:6379` (Tyk needs the name including the port) 
+
+The Bitnami chart also creates a secret `tyk-redis` which stores the connection password in `redis-password`. We will make use of this secret in installation later.
+
+**3. Install PostgreSQL (if you don't already have PostgreSQL installed)**
+
+If you do not already have PostgreSQL installed, you may use these charts provided by Bitnami.
+
+```bash
+helm upgrade tyk-postgres oci://registry-1.docker.io/bitnamicharts/postgresql --set "auth.database=tyk_analytics" -n $NAMESPACE --install
+```
+
+Follow the notes from the installation output to get connection details.
+
+We require the PostgreSQL connection string for Tyk installation. This can be stored in a secret and will be used in installation later.
+
+```bash
+POSTGRESQLURL=host=tyk-postgres-postgresql.$NAMESPACE.svc\ port=5432\ user=postgres\ password=$(kubectl get secret --namespace $NAMESPACE tyk-postgres-postgresql -o jsonpath="{.data.postgres-password}" | base64 -d)\ database=tyk_analytics\ sslmode=disable
+
+kubectl create secret generic postgres-secrets  -n $NAMESPACE --from-literal=postgresUrl="$POSTGRESQLURL"
+```
+
+
+{{< note >}}
+**Note**
+
+Ensure that you are installing PostgreSQL versions that are supported by Tyk. Please consult the list of [supported versions]({{< ref "tyk-dashboard/database-options" >}}) that are compatible with Tyk.
+{{< /note >}}
+
+**4. Install Tyk Control Plane**
+```bash
+helm repo add tyk-helm https://helm.tyk.io/public/helm/charts/
+
+helm repo update
+
+helm upgrade tyk-cp tyk-helm/tyk-control-plane -n $NAMESPACE \
+  --install \
+  --set global.adminUser.useSecretName=admin-secrets \
+  --set global.secrets.useSecretName=my-secrets \
+  --set tyk-mdcb.mdcb.useSecretName=mdcb-secrets \
+  --set global.redis.addrs="{tyk-redis-master.$NAMESPACE.svc:6379}" \
+  --set global.redis.passSecret.name=tyk-redis \
+  --set global.redis.passSecret.keyName=redis-password \
+  --set global.postgres.connectionStringSecret.name=postgres-secrets \
+  --set global.postgres.connectionStringSecret.keyName=postgresUrl
+```
+
+**5. Done!**
+
+Now Tyk Dashboard and Tyk MDCB should be accessible through service `dashboard-svc-tyk-control-plane-tyk-dashboard` at port `3000` and `mdcb-svc-tyk-control-plane-tyk-mdcb` at port `9091` respectively. You can login to Dashboard using the admin email and password to start managing APIs.
+
+You can get MDCB connection details from the installation output, to prepare installation of [setup MDCB Data Plane]({{<ref "product-stack/tyk-charts/tyk-data-plane-chart">}}):
+
+For the complete installation guide and configuration options, please see [Tyk Control Plane Helm Chart]({{<ref "product-stack/tyk-charts/tyk-control-plane-chart">}}).
 
 ## Configuration
 
