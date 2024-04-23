@@ -20,7 +20,13 @@ Your Data Plane can be in the same physical data centre as the Control Plane wit
 
 ## Installing in a Kubernetes Cluster with our Helm Chart
 
-The [Tyk Data Plane]({{<ref "product-stack/tyk-charts/tyk-data-plane-chart">}}) helm chart is pre-configured to install Tyk Gateway and Tyk Pump that connects to MDCB or Tyk Cloud, our SaaS MDCB Control Plane. After setting up Tyk Control Plane with Helm Chart, obtain the required connection details from installation output and configure data plane chart following [this guide]({{<ref ""product-stack/tyk-charts/tyk-data-plane-chart"">}}).
+The [Tyk Data Plane]({{<ref "product-stack/tyk-charts/tyk-data-plane-chart">}}) helm chart is pre-configured to install Tyk Gateway and Tyk Pump that connects to MDCB or Tyk Cloud, our SaaS MDCB Control Plane. After setting up Tyk Control Plane with Helm Chart, obtain the required connection details from installation output and configure data plane chart following [this guide]({{<ref "product-stack/tyk-charts/tyk-data-plane-chart">}}).
+
+{{< note >}}
+**Note**
+
+With Helm Chart, you don't need to go through following steps to configure Tyk Gateway. The necessary configurations has been set in `tyk-data-plane` chart templates.
+{{< /note >}}
 
 ## Configuring an existing Tyk Gateway
 If you have Redis and a working Tyk Gateway deployed, follow below steps to configure your gateways to work in RPC mode.
