@@ -15,15 +15,21 @@ aliases:
 
 You may configure an unlimited number of [Tyk Data Planes]({{< ref "tyk-multi-data-centre/mdcb-components#data-plane" >}}) containing Worker Gateways for ultimate High Availablity (HA). We recommend that you deploy your worker gateways as close to your upstream services as possible in order to reduce latency.
 
-It is a requirement that all your Worker Gateways in a Data Plane DC share the same Redis DB in order to take advantage of Tyk's DRL and quota features.
+It is a requirement that all your Worker Gateways in a Data Plane data centre share the same Redis DB in order to take advantage of Tyk's DRL and quota features.
 Your Data Plane can be in the same physical data centre as the Control Plane with just a logical network separation. If you have many Tyk Data Planes, they can be deployed in a private-cloud, public-cloud, or even on bare-metal.
 
-## Prerequisites
+## Installing in a Kubernetes Cluster with our Helm Chart
 
-* Redis
-* A working headless/open source Tyk Gateway deployed
+The [Tyk Data Plane]({{<ref "product-stack/tyk-charts/tyk-data-plane-chart">}}) helm chart is pre-configured to install Tyk Gateway and Tyk Pump that connects to MDCB or Tyk Cloud, our SaaS MDCB Control Plane. After setting up Tyk Control Plane with Helm Chart, obtain the required connection details from installation output and configure data plane chart following [this guide]({{<ref ""product-stack/tyk-charts/tyk-data-plane-chart"">}}).
 
-## Worker DC Configuration
+## Configuring an existing Tyk Gateway
+If you have Redis and a working Tyk Gateway deployed, follow below steps to configure your gateways to work in RPC mode.
+
+### Prerequisites
+- Redis
+- A working headless/open source Tyk Gateway deployed
+
+### Worker Gateway Configuration
 
 Modify the Tyk Gateway configuration (`tyk.conf`) as follows:
 `"use_db_app_configs": false,`
