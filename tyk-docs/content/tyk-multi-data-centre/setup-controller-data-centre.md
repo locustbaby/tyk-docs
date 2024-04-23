@@ -17,7 +17,7 @@ The [Tyk Control Plane]({{< ref "tyk-multi-data-centre/mdcb-components.md#contro
 ## Installing MDCB Component with package
 The MDCB component must be able to connect to Redis and MongoDB/PostgreSQL directly from within the Control Plane deployment. It does not require access to the Tyk Gateway(s) or Dashboard application.
 
-The MDCB component will however, by default, expose an RPC service on port 9091, to which the Tyk Data Plane (Worker gateway(s)) data centres will need connectivity.
+The MDCB component will however, by default, expose an RPC service on port 9091, to which the [Tyk Data Plane]({{< ref "tyk-multi-data-centre/mdcb-components.md#data-plane" >}}) data centres, i.e. the worker gateway(s) that serves API traffic, will need connectivity.
 
 ### Prerequisites
 We will assume that your account manager has provided you with a valid MDCB and Dashboard License and the command to enable you to download the MDCB package.
@@ -63,18 +63,16 @@ sudo yum install tyk-sink
 
 ## Installing in a Kubernetes Cluster with our Helm Chart
 
-The [Tyk Control Plane]({{<ref "product-stack/tyk-charts/tyk-control-plane-chart">}}) helm chart is pre-configured to install Tyk control plane
-for multi data centre API management from a single Dashboard with the MDCB component.
+The [Tyk Control Plane]({{<ref "product-stack/tyk-charts/tyk-control-plane-chart">}}) helm chart is pre-configured to install Tyk control plane for multi data centre API management from a single Dashboard with the MDCB component.
 
 ### Prerequisites
-Before installation, you need to prepare the followings:
 - [Kubernetes 1.19+](https://kubernetes.io/docs/setup/)
 - [Helm 3+](https://helm.sh/docs/intro/install/)
 - MDCB and Dashboard license
 
 ### Quick Start
 
-**1. Setup required credentials**
+#### Step 1 - Setup required credentials
 
 First, you need to provide Tyk Dashboard and MDCB license, admin email and password, and API keys. We recommend to store them in secrets.
 
@@ -105,7 +103,7 @@ kubectl create secret generic admin-secrets -n $NAMESPACE \
     --from-literal=adminUserPassword=$ADMIN_PASSWORD
 ```
 
-**2. Install Redis (if you don't already have Redis installed)**
+#### Step 2 - Install Redis (if you don't already have Redis installed)
 
 If you do not already have Redis installed, you may use these charts provided by Bitnami.
 
@@ -116,7 +114,7 @@ Follow the notes from the installation output to get connection details and pass
 
 The Bitnami chart also creates a secret `tyk-redis` which stores the connection password in `redis-password`. We will make use of this secret in installation later.
 
-**3. Install PostgreSQL (if you don't already have PostgreSQL installed)**
+#### Step 3 - Install PostgreSQL (if you don't already have PostgreSQL installed)
 
 If you do not already have PostgreSQL installed, you may use these charts provided by Bitnami.
 
@@ -141,7 +139,7 @@ kubectl create secret generic postgres-secrets  -n $NAMESPACE --from-literal=pos
 Ensure that you are installing PostgreSQL versions that are supported by Tyk. Please consult the list of [supported versions]({{< ref "tyk-dashboard/database-options" >}}) that are compatible with Tyk.
 {{< /note >}}
 
-**4. Install Tyk Control Plane**
+#### Step 4 - Install Tyk Control Plane
 ```bash
 helm repo add tyk-helm https://helm.tyk.io/public/helm/charts/
 
@@ -159,7 +157,7 @@ helm upgrade tyk-cp tyk-helm/tyk-control-plane -n $NAMESPACE \
   --set global.postgres.connectionStringSecret.keyName=postgresUrl
 ```
 
-**5. Done!**
+#### Step 5 - Done!
 
 Now Tyk Dashboard and Tyk MDCB should be accessible through service `dashboard-svc-tyk-control-plane-tyk-dashboard` at port `3000` and `mdcb-svc-tyk-control-plane-tyk-mdcb` at port `9091` respectively. You can login to Dashboard using the admin email and password to start managing APIs.
 
