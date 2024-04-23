@@ -14,7 +14,7 @@ aliases:
 ## Introduction
 The [Tyk Control Plane]({{< ref "tyk-multi-data-centre/mdcb-components.md#control-plane" >}}) will contain all the standard components of a standard Self-Managed installation with the addition of one additional component: the Multi Data Centre Bridge (MDCB).
 
-## Installing MDCB Component with package
+## Installing MDCB Component On Linux
 The MDCB component must be able to connect to Redis and MongoDB/PostgreSQL directly from within the Control Plane deployment. It does not require access to the Tyk Gateway(s) or Dashboard application.
 
 The MDCB component will however, by default, expose an RPC service on port 9091, to which the [Tyk Data Plane]({{< ref "tyk-multi-data-centre/mdcb-components.md#data-plane" >}}) data centres, i.e. the worker gateway(s) that serves API traffic, will need connectivity.
@@ -35,6 +35,7 @@ We will assume that the following components are up and running in your Controll
 When using SQL rather than MongoDB in a production environment, we only support PostgreSQL.
 {{< /note >}}
 
+### Installing using RPM and Debian packages
 To download the relevant MDCB package from PackageCloud:
 
 ```curl
