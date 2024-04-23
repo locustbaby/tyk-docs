@@ -109,7 +109,7 @@ kubectl create secret generic admin-secrets -n $NAMESPACE \
 If you do not already have Redis installed, you may use these charts provided by Bitnami.
 
 ```bash
-helm upgrade tyk-redis oci://registry-1.docker.io/bitnamicharts/redis -n $NAMESPACE --install
+helm upgrade tyk-redis oci://registry-1.docker.io/bitnamicharts/redis -n $NAMESPACE --install --version 19.0.2
 ```
 Follow the notes from the installation output to get connection details and password. The DNS name of your Redis as set by Bitnami is `tyk-redis-master.tyk.svc:6379` (Tyk needs the name including the port) 
 
@@ -120,7 +120,7 @@ The Bitnami chart also creates a secret `tyk-redis` which stores the connection 
 If you do not already have PostgreSQL installed, you may use these charts provided by Bitnami.
 
 ```bash
-helm upgrade tyk-postgres oci://registry-1.docker.io/bitnamicharts/postgresql --set "auth.database=tyk_analytics" -n $NAMESPACE --install
+helm upgrade tyk-postgres oci://registry-1.docker.io/bitnamicharts/postgresql --set "auth.database=tyk_analytics" -n $NAMESPACE --install --version 14.2.4
 ```
 
 Follow the notes from the installation output to get connection details.
@@ -160,9 +160,9 @@ helm upgrade tyk-cp tyk-helm/tyk-control-plane -n $NAMESPACE \
 
 #### Step 5 - Done!
 
-Now Tyk Dashboard and Tyk MDCB should be accessible through service `dashboard-svc-tyk-control-plane-tyk-dashboard` at port `3000` and `mdcb-svc-tyk-control-plane-tyk-mdcb` at port `9091` respectively. You can login to Dashboard using the admin email and password to start managing APIs.
+Now Tyk Dashboard and Tyk MDCB should be accessible through service `dashboard-svc-tyk-cp-tyk-dashboard` at port `3000` and `mdcb-svc-tyk-cp-tyk-mdcb` at port `9091` respectively. You can login to Dashboard using the admin email and password to start managing APIs.
 
-You can use the MDCB connection details included in the installation output, to install the [MDCB Data Plane]({{<ref "product-stack/tyk-charts/tyk-data-plane-chart">}}):
+You can use the MDCB connection details included in the installation output, to install the [MDCB Data Plane]({{<ref "product-stack/tyk-charts/tyk-data-plane-chart">}}).
 
 For the complete installation guide and configuration options, please see [Tyk Control Plane Helm Chart]({{<ref "product-stack/tyk-charts/tyk-control-plane-chart">}}).
 
