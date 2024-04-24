@@ -278,7 +278,7 @@ You can enable Internal [Tyk Identity Broker (TIB)]({{<ref "tyk-identity-broker"
 
 <li>
 <details>
-<summary>Dashboard: Customise ServiceAccount to be used</summary>
+<summary>Dashboard: Customise ServiceAccount</summary>
 
 Allow users to customise `serviceAccountName` for dashboard, the name of the [Service Account](https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/) that is going to be used by the Pods.
 </details>
