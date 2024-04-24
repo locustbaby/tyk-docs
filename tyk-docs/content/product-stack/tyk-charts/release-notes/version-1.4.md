@@ -318,7 +318,7 @@ Users can configure Tyk Pump service port name. Default is `http`.
 
 <li>
 <details>
-<summary>Portal: Customise ServiceAccount to be used</summary>
+<summary>Portal: Customise ServiceAccount</summary>
 
 Allow users to customise `serviceAccountName` for portal, the name of the [Service Account](https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/) that is going to be used by the Pods.
 </details>
