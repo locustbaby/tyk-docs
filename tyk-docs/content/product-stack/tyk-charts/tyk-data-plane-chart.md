@@ -62,28 +62,35 @@ If the worker gateway will be deployed via Helm, tyk-data-plane chart helps to f
     export ORG_ID=$(kubectl get secret --namespace tyk tyk-operator-conf -o jsonpath="{.data.TYK_ORG}" | base64 --decode)
 
 
-2- Create a Kubernetes Secret based on credentials.
-    kubectl create secret --namespace tyk generic tyk-data-plane-details \
+2- Create a Kubernetes Secret based on credentials in data plane's namespace, e.g. `tyk-dp`.
+    
+    kubectl create namespace tyk-dp
+
+    kubectl create secret generic tyk-data-plane-details \
     --from-literal "orgId=$ORG_ID" \
     --from-literal "userApiKey=$USER_API_KEY" \
-    --from-literal "groupID=$GROUP_ID"
+    --from-literal "groupID=$GROUP_ID" \
+    --namespace tyk-dp
 
-3- Refer this Kubernetes secret (tyk-data-plane-details) while installing worker gateways through `global.remoteControlPlane.useSecretName`
-in tyk-data-plane chart.
+3- Refer this Kubernetes secret (tyk-data-plane-details) while installing worker gateways through 
+`global.remoteControlPlane.useSecretName` in tyk-data-plane chart.
 
-4- Set `global.remoteControlPlane.connectionString`, `global.remoteControlPlane.useSSL` and `global.remoteControlPlane.sslInsecureSkipVerify`
- in tyk-data-plane chart to access MDCB service.
+4- Set `global.remoteControlPlane.connectionString`, `global.remoteControlPlane.useSSL` and 
+`global.remoteControlPlane.sslInsecureSkipVerify` in tyk-data-plane chart to access MDCB service.
 
 If data plane is deployed in the same cluster, it can be accessed via this connection string:
     export MDCB_CONNECTIONSTRING="mdcb-svc-tyk-control-plane-tyk-mdcb.tyk.svc:9091"
 
-If data plane is not deployed in the same cluster as control plane, get the connection string according to how MDCB service is exposed.
+If data plane is not deployed in the same cluster as control plane, get the connection string according 
+to how MDCB service is exposed.
 ```
 
 1. Follow installation output to export USER_API_KEY, ORG_ID, and MDCB_CONNECTIONSTRING. The values can be used to set `global.remoteControlPlane`'s `userApiKey`, `orgId`, and `connectionString` respectively.
 
 2. Also verify that the SSL connection configuration is set correctly:
 ```yaml
+global:
+  remoteControlPlane:
     # enable/disable ssl
     useSSL: false
     # Disables SSL certificate verification
@@ -111,13 +118,13 @@ At a minimum, modify values.yaml for the following settings:
 Consult the [Configuration](#configuration) section for the available configuration options and modify your local `values.yaml` file accordingly. Then install the chart by issuing the following command below:
 
 ```bash
-    helm install tyk-data-plane tyk-helm/tyk-data-plane -n tyk --create-namespace -f values.yaml
+    helm install tyk-data-plane tyk-helm/tyk-data-plane -n tyk-dp --create-namespace -f values.yaml
 ```
 
 ### Uninstalling the Chart
 
 ```bash
-helm uninstall tyk-data-plane -n tyk
+helm uninstall tyk-data-plane -n tyk-dp
 ```
 
 This removes all the Kubernetes components associated with the chart and deletes the release.
@@ -125,7 +132,7 @@ This removes all the Kubernetes components associated with the chart and deletes
 ### Upgrading Chart
 
 ```bash
-helm upgrade tyk-data-plane tyk-helm/tyk-data-plane -n tyk
+helm upgrade tyk-data-plane tyk-helm/tyk-data-plane -n tyk-dp
 ```
 
 ## Configuration
