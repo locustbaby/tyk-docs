@@ -681,7 +681,7 @@ It is used to set `TYK_MDCB_HEALTHCHECKPORT`
 
 Assuming that TLS certificates for the Tyk MDCB are available in the Kubernetes Secret `mdcb-tls-secret`, follow these steps to enable TLS:
 1. Set `tyk-mdcb.mdcb.tls.useSSL` to true.
-2. Set `tyk-mdcb.mdcb.tls.secretName to the name of the Kubernetes secret containing TLS certificates for the Tyk MDCB, in this case, `mdcb-tls-secret`.
+2. Set `tyk-mdcb.mdcb.tls.secretName` to the name of the Kubernetes secret containing TLS certificates for the Tyk MDCB, in this case, `mdcb-tls-secret`.
 
 ```yaml
 tyk-mdcb:
