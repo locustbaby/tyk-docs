@@ -677,6 +677,40 @@ This port lets MDCB allow standard health checks.
 It also defines the path for liveness and readiness probes.
 It is used to set `TYK_MDCB_HEALTHCHECKPORT`
 
+#### Enabling MDCB TLS
+
+Assuming that TLS certificates for the Tyk MDCB are available in the Kubernetes Secret `mdcb-tls-secret`, follow these steps to enable TLS:
+1. Set `tyk-mdcb.mdcb.tls.useSSL` to true.
+2. Set `tyk-mdcb.mdcb.tls.secretName to the name of the Kubernetes secret containing TLS certificates for the Tyk MDCB, in this case, `mdcb-tls-secret`.
+
+```yaml
+tyk-mdcb:
+  mdcb:
+    tls:
+      # enables ssl for mdcb
+      useSSL: false
+
+      # the path to where the keys will be mounted in the pod
+      certificatesMountPath: "/etc/certs"
+
+      # location to pem encoded private key
+      certificateKeyFile: "/etc/certs/tls.key"
+
+      # location to pem encoded certificate
+      certificateCertFile: "/etc/certs/tls.crt"
+
+      # Sets the AES256 secret which is used to encode certificate private keys when
+      # they uploaded via certificate storage.
+      # It is used to set TYK_MDCB_SECURITY_PRIVATECERTIFICATEENCODINGSECRET
+      privateCertificateEncodingSecret: ""
+
+      # the name of the secret
+      secretName: "mdcb-tls-secret"
+
+      # the name of the volume
+      volumeName: "mdcb-tls-secret-volume"
+```
+
 ### Tyk Bootstrap Configurations
 
 To enable bootstrapping, set `global.components.bootstrap` to `true`. It would run [tyk-k8s-bootstrap](https://github.com/TykTechnologies/tyk-k8s-bootstrap) to bootstrap `tyk-control-plane` and to create Kubernetes secrets that can be utilised in Tyk Operator and Tyk Developer Portal.
