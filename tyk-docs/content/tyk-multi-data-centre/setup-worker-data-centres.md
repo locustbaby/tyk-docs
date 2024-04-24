@@ -20,16 +20,71 @@ Your Data Plane can be in the same physical data centre as the Control Plane wit
 
 ## Installing in a Kubernetes Cluster with our Helm Chart
 
-The [Tyk Data Plane]({{<ref "product-stack/tyk-charts/tyk-data-plane-chart">}}) helm chart is pre-configured to install Tyk Gateway and Tyk Pump that connects to MDCB or Tyk Cloud, our SaaS MDCB Control Plane. After setting up Tyk Control Plane with Helm Chart, obtain the required connection details from installation output and configure data plane chart following [this guide]({{<ref "product-stack/tyk-charts/tyk-data-plane-chart">}}).
+The [Tyk Data Plane]({{<ref "product-stack/tyk-charts/tyk-data-plane-chart">}}) helm chart is pre-configured to install Tyk Gateway and Tyk Pump that connects to MDCB or Tyk Cloud, our SaaS MDCB Control Plane. After setting up Tyk Control Plane with Helm Chart, obtain the required connection details from installation output and configure data plane chart as below. For Tyk Cloud users, following [Tyk Cloud instructions]({{<ref "tyk-cloud/environments-deployments/hybrid-gateways">}}) to deploy your hybrid gateways.
+
+### Prerequisites
+
+* [Kubernetes 1.19+](https://kubernetes.io/docs/setup/)
+* [Helm 3+](https://helm.sh/docs/intro/install/)
+* Connection details to remote control plane from the tyk-control-plane installation output.
+
+The following quick start guide explains how to use the [Tyk Data Plane Helm chart]({{<ref "/product-stack/tyk-charts/tyk-data-plane-chart">}}) to configure Tyk Gateway that includes:
+- Redis for key storage
+- Tyk Pump to send analytics to Tyk Control Plane and Prometheus
+
+At the end of this quickstart Tyk Gateway should be accessible through service `gateway-svc-tyk-dp-tyk-gateway` at port `8080`. Pump is also configured with Hybrid Pump which sends aggregated analytics to MDCB, and Prometheus Pump which expose metrics locally at `:9090/metrics`.
+
+### 1. Set connection details
+
+Set the below environment variables and replace values with connection details to your MDCB control plane. See [Tyk Data Plane]({{<ref "product-stack/tyk-charts/tyk-data-plane-chart#obtain-remote-control-plane-connection-details-from-tyk-control-plane-chart">}}) documentation on how to get the connection details.
+
+```bash
+USER_API_KEY=9d20907430e440655f15b851e4112345
+ORG_ID=64cadf60173be90001712345
+MDCB_CONNECTIONSTRING=mdcb-svc-tyk-control-plane-tyk-mdcb.tyk.svc:9091
+GROUP_ID=your-group-id
+MDCB_USESSL=false
+```
+
+### 2. Then use Helm to install Redis and Tyk
+
+```bash
+NAMESPACE=tyk-dp
+APISecret=foo
+
+helm repo add tyk-helm https://helm.tyk.io/public/helm/charts/
+helm repo update
+
+helm upgrade tyk-redis oci://registry-1.docker.io/bitnamicharts/redis -n $NAMESPACE --create-namespace --install
+
+helm upgrade tyk-dp tyk-helm/tyk-data-plane -n $NAMESPACE --create-namespace \
+  --install \
+  --set global.remoteControlPlane.userApiKey=$USER_API_KEY \
+  --set global.remoteControlPlane.orgId=$ORG_ID \
+  --set global.remoteControlPlane.connectionString=$MDCB_CONNECTIONSTRING \
+  --set global.remoteControlPlane.groupID=$GROUP_ID \
+  --set global.remoteControlPlane.useSSL=$MDCB_USESSL \
+  --set global.secrets.APISecret="$APISecret" \
+  --set global.redis.addrs="{tyk-redis-master.$NAMESPACE.svc.cluster.local:6379}" \
+  --set global.redis.passSecret.name=tyk-redis \
+  --set global.redis.passSecret.keyName=redis-password
+```
+
+### 3. Done!
+
+Now Tyk Gateway should be accessible through service `gateway-svc-tyk-dp-tyk-gateway` at port `8080`. Pump is also configured with Hybrid Pump which sends aggregated analytics to MDCB, and Prometheus Pump which expose metrics locally at `:9090/metrics`.
+
+For the complete installation guide and configuration options, please see [Tyk Data Plane Chart]({{<ref "product-stack/tyk-charts/tyk-data-plane-chart">}}).
+
+
+## Configuring an existing Tyk Gateway
+If you have Redis and a working Tyk Gateway deployed, follow below steps to configure your gateways to work in RPC mode.
 
 {{< note >}}
 **Note**
 
-With Helm Chart, you don't need to go through following steps to configure Tyk Gateway. The necessary configurations has been set in `tyk-data-plane` chart templates.
+If you deployed Gateway with `tyk-data-plane` Chart, you don't need to go through following steps to configure Tyk Gateway. The necessary configurations has been set in `tyk-data-plane` chart templates.
 {{< /note >}}
-
-## Configuring an existing Tyk Gateway
-If you have Redis and a working Tyk Gateway deployed, follow below steps to configure your gateways to work in RPC mode.
 
 ### Prerequisites
 - Redis
