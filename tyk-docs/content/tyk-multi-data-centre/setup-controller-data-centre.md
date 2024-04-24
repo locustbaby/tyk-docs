@@ -162,7 +162,7 @@ helm upgrade tyk-cp tyk-helm/tyk-control-plane -n $NAMESPACE \
 
 Now Tyk Dashboard and Tyk MDCB should be accessible through service `dashboard-svc-tyk-cp-tyk-dashboard` at port `3000` and `mdcb-svc-tyk-cp-tyk-mdcb` at port `9091` respectively. You can login to Dashboard using the admin email and password to start managing APIs.
 
-You can use the MDCB connection details included in the installation output, to install the [MDCB Data Plane]({{<ref "product-stack/tyk-charts/tyk-data-plane-chart">}}).
+You can use the MDCB connection details included in the installation output, to install the [MDCB Data Plane]({{<ref "tyk-multi-data-centre/setup-worker-data-centres">}}).
 
 For the complete installation guide and configuration options, please see [Tyk Control Plane Helm Chart]({{<ref "product-stack/tyk-charts/tyk-control-plane-chart">}}).
 
