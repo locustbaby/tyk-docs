@@ -688,7 +688,7 @@ tyk-mdcb:
   mdcb:
     tls:
       # enables ssl for mdcb
-      useSSL: false
+      useSSL: true
 
       # the path to where the keys will be mounted in the pod
       certificatesMountPath: "/etc/certs"
