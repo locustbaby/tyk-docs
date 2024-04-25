@@ -62,7 +62,7 @@ At a minimum, modify `values.yaml` for the following settings:
 4. [Tyk MDCB License](#tyk-mdcb-license-required)
 5. If you would like to use Developer Portal, an additional license is required: [Tyk Developer Portal License](#tyk-developer-portal-license-required)
 
-By default, the chart would expose MDCB service at `mdcb-svc-tyk-control-plane-tyk-mdcb.tyk.svc:9091`. If you would like to access the control plane from outside the cluster, please change the service type `tyk-mdcb.mdcb.service.type` to NodePort or LoadBalancer.
+By default, the chart would expose MDCB service as ClusterIP. If you would like to access the control plane from outside the cluster, please change the service type `tyk-mdcb.mdcb.service.type` to NodePort or LoadBalancer.
 
 Then just run:
 ```bash
