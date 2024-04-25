@@ -83,7 +83,7 @@ If you have Redis and a working Tyk Gateway deployed, follow below steps to conf
 {{< note >}}
 **Note**
 
-If you deployed Gateway with `tyk-data-plane` Chart, you don't need to go through following steps to configure Tyk Gateway. The necessary configurations has been set in `tyk-data-plane` chart templates.
+If you have deployed Gateway with `tyk-data-plane` Chart, you don't need to go through following steps to configure Tyk Gateway. The necessary configurations has been set in `tyk-data-plane` chart templates.
 {{< /note >}}
 
 ### Prerequisites
