@@ -115,6 +115,12 @@ Follow the notes from the installation output to get connection details and pass
 
 The Bitnami chart also creates a secret `tyk-redis` which stores the connection password in `redis-password`. We will make use of this secret in installation later.
 
+{{< note >}}
+**Note**
+
+Ensure that you are installing Redis versions that are supported by Tyk. Please consult the list of [supported versions]({{< ref "planning-for-production/redis#supported-versions" >}}) that are compatible with Tyk.
+{{< /note >}}
+
 #### Step 3 - Install PostgreSQL (if you don't already have PostgreSQL installed)
 
 If you do not already have PostgreSQL installed, you may use these charts provided by Bitnami.
