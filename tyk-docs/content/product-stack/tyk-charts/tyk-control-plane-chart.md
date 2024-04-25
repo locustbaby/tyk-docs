@@ -232,7 +232,7 @@ This helm chart enables the `PodDisruptionBudget` for MongoDB with an arbiter re
 Increase the replica count in the helm chart deployment to a minimum of 2 to remedy this issue.
 {{< /note >}}
 
-Configure `global.mongo.mongoURL` and `global.storageType` as below. You should replace password in the connection string with the MONGODB_ROOT_PASSWORD you obtain from the installation output notes.
+Configure `global.mongo.mongoURL` and `global.storageType` as below. You should replace `pass` in the connection string with the MONGODB_ROOT_PASSWORD you obtain from the installation output notes.
 
 ```yaml
 global:
