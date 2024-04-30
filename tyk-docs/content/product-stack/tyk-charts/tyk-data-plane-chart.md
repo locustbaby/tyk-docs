@@ -72,7 +72,7 @@ If the worker gateway will be deployed via Helm, tyk-data-plane chart helps to f
     --from-literal "groupID=$GROUP_ID" \
     --namespace tyk-dp
 
-3- Refer this Kubernetes secret (tyk-data-plane-details) while installing worker gateways through 
+3- Refer to this Kubernetes secret (tyk-data-plane-details) while installing worker gateways through
 `global.remoteControlPlane.useSecretName` in tyk-data-plane chart.
 
 4- Set `global.remoteControlPlane.connectionString`, `global.remoteControlPlane.useSSL` and 
