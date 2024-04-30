@@ -18,11 +18,11 @@ Our minor releases are supported until our next minor comes out.
 
 ## 1.4.0 Release Notes
 
-##### Release Date -- Apr 2024
+##### Release Date -- XX Apr 2024
 
 #### Breaking Changes
 <!-- Required. Use the following statement if there are no breaking changes, or explain if there are -->
-For MongoDB users: Tyk Charts 1.4.0 uses `mongo-go` as the default driver to connect to MongoDB. `mongo-go` driver is compatible with MongoDB 4.4.x and above. For MongoDB versions prior to 4.4, please set `global.mongo.driver` to `mgo`. We recommend reading [Choose a MongoDB driver]({{<ref "/planning-for-production/database-settings/mongodb#choose-a-mongodb-driver">}}) when you need to change driver setting.
+This release has no breaking changes.
 
 <!-- The following "Changed error log messages" section is Optional!
 Instructions: We should mention in the changelog section ALL changes in our application log messages. In case we made such changes, this section should also be added, to make sure the users don't miss this notice among other changelog lines. -->
@@ -78,17 +78,16 @@ Given the time difference between your upgrade and the release of this version, 
 
 #### Deprecations
 <!-- Required. Use the following statement if there are no deprecations, or explain if there are -->
-There are no deprecations in this release.
+- In `tyk-dashboard` chart, `dashboard.hashKeys` field is deprecated and be replaced with `.global.hashKeys`. This is to ensure Dashboard, Gateway, and MDCB always get the same hashKeys configurations. Setting `dashboard.hashKeys` will no longer take effect. Please only use `.global.hashKeys` field.
 
 <!-- Optional section!
 Used to share and notify users about our plan to deprecate features, configs etc. 
-Once you put an item in this section, we must keep this item listed in all the following releases till the deprecation happens. -->
-##### Future deprecations
-- In `tyk-dashboard` chart, `dashboard.hashKeys` field will be deprecated in future and be replaced with `.global.hashKeys`. This is to ensure Dashboard, Gateway, and MDCB always get the same hashKeys configurations. It is recommended users do not set `dashboard.hashKeys` and only use `.global.hashKeys` field.
+Once you put an item in this section, we must keep this item listed in all the following releases till the deprecation happens
+##### Future deprecations. -->
 
 #### Upgrade instructions
 <!-- Required. For patches release (Z>0) use this: -->
-For users currently on v1.2.x, we strongly recommend promptly upgrading to the latest release. 
+For users currently on v1.3.x, we strongly recommend promptly upgrading to the latest release. 
 <br/>
 <!-- Go to the [Upgrading Tyk](#upgrading-tyk) section for detailed upgrade Instructions.
 -->
@@ -103,29 +102,28 @@ helm upgrade [RELEASE_NAME] tyk-helm/[CHART_NAME]
 
 #### Release Highlights
 <!-- Required. Use similar ToV to previous release notes. For example for a patch release: -->
-This release primarily focuses on adding support for Tyk v5.3 configurations.
 
+##### GA release of tyk-control-plane chart and tyk-mdcb chart
+We're pleased to announce the official release of the Tyk Helm Charts for Tyk Control Plane and MDCB! Following a successful beta phase, these charts are now stable and ready for production use. 
+
+With this release, we aim to provide a straightforward solution for deploying and managing Tyk Control Plane and Multi-Data Center Bridge (MDCB) using Helm Charts. Whether you're looking for our recommended setup configurations or need flexibility to adapt to your architectural requirements, our Helm Charts have you covered.
+
+To leverage this stable release and simplify your Tyk deployments, we invite you to explore our example setup for MDCB Control Plane using Helm Chart. Simply follow our [MDCB Control Plane setup guide]({{<ref "tyk-multi-data-centre/setup-controller-data-centre">}}) to get started.
+
+##### Updated default Tyk versions
 Tyk Charts 1.4 will install the following Tyk component versions by default.
 - Tyk Gateway v5.3.1
 - Tyk Dashboard v5.3.1
 - Tyk Pump v1.9.0
-- Tyk MDCB v2.5.0
-- Tyk Developer Portal v1.8.3
+- Tyk MDCB v2.5.1
+- Tyk Developer Portal v1.8.5
 
 For a comprehensive list of changes, please refer to the detailed [changelog]({{< ref "#Changelog-v1.4.0">}}) below.
-
-##### Support new features available from Tyk v5.3.0
-Tyk Charts 1.3 adds support for a number of new Tyk features available from Tyk 5.3.0. These include: Support use of SSL certificates when connecting to Redis, Configurations for OAS Validate examples and OAS Validate Schema defaults.
-
-##### Graph Pump
-Tyk Charts 1.3 adds support for Graph MongoDB Pump, Graph SQL Pump and Graph SQL Aggregate Pump. see [Graph Pump setup]({{<ref "/tyk-stack/tyk-pump/tyk-pump-configuration/graph-pump">}}) to learn more about the GraphQL-specific metrics available.
-
-##### Enable Tyk Identity Broker (TIB) in Tyk Dashboard
-Tyk Charts 1.3 adds a field to enable Internal [Tyk Identity Broker (TIB)]({{<ref "tyk-identity-broker">}}) in Tyk Dashboard by field `tyk-dashboard.tib.enabled` to `true`.
 
 #### Downloads
 - [Source code](https://github.com/TykTechnologies/tyk-charts/archive/refs/tags/v1.4.0.tar.gz)
 - [ArtifactHub - tyk-stack](https://artifacthub.io/packages/helm/tyk-helm/tyk-stack/1.4.0)
+- [ArtifactHub - tyk-control-plane](https://artifacthub.io/packages/helm/tyk-helm/tyk-control-plane/1.4.0)
 - [ArtifactHub - tyk-data-plane](https://artifacthub.io/packages/helm/tyk-helm/tyk-data-plane/1.4.0)
 - [ArtifactHub - tyk-oss](https://artifacthub.io/packages/helm/tyk-helm/tyk-oss/1.4.0)
 
@@ -150,211 +148,88 @@ Each change log item should be expandable. The first line summarises the changel
 
 <li>
 <details>
-<summary>Global config: Support use of SSL certificates when connecting to Redis</summary>
+<summary>OSS: Simplify Tyk Operator Setup with Kubernetes Secret Creation</summary>
 
-Added following fields in `global.redis` to support use of SSL certificates when connecting to Redis.
+When you set `operatorSecret.enabled` to `true` in the `tyk-oss` chart, a Kubernetes Secret named `tyk-operator-conf` will be automatically created in the same namespace. This secret is essential for connecting Tyk Operator to the Gateway, enabling seamless management of Tyk API resources. To learn more about setting up Tyk Operator, check out [Tyk Operator installation]({{<ref "tyk-stack/tyk-operator/installing-tyk-operator">}}).
+</details>
+</li>
 
-```yaml
-    # Allows usage of self-signed certificates when connecting to an encrypted Redis database.
-    # sslInsecureSkipVerify: false
 
-    # Path to the CA file.
-    # sslCAFile: ""
+<li>
+<details>
+<summary>MDCB: Enhanced analytics configuration options</summary>
+We have introduced new configuration options for handling analytics data flow in MDCB deployments. By default, MDCB stores aggregated analytics data from the data plane pump to SQL/Mongo. Additionally, users have the flexibility to enable Pump in the control plane, allowing MDCB to send analytics to Redis instead.
 
-    # The Volume mount path
-    # Default value: /etc/certs
-    # certificatesMountPath: ""
+Here are the default configurations:
+```yaml 
+mdcb:
+  # When it is set to true, instead of sending analytics directly to MongoDB / SQL,
+  # MDCB can send analytics to Redis. This will allow tyk-pump to pull
+  # analytics from Redis and send to your own data sinks.
+  # It is used to set TYK_MDCB_FORWARDANALYTICSTOPUMP
+  forwardAnalyticsToPump: false
 
-    # Path to the cert file.
-    # sslCertFile: ""
+  # This enables saving analytics in multiple keys as oppose to just having one.
+  # It is useful when using a Redis cluster.
+  # It also only works when TYK_MDCB_FORWARDANALYTICSTOPUMP is set to true.
+  enableMultipleAnalyticsKey: true
 
-    # Path to the key file.
-    # sslKeyFile: ""
+  # This should be set to true if you choose not to store selective analytics
+  dontStoreSelective: false
 
-    # Maximum supported TLS version. Valid values are TLS 1.0, 1.1, 1.2, 1.3.
-    # Default value: 1.3
-    # sslMaxVersion: "1.3"
+  # This should be set to true if you choose not to store aggregate analytics
+  dontStoreAggregate: false
 
-    # Minimum supported TLS version. Valid values are TLS 1.0, 1.1, 1.2, 1.3.
-    # Default value: 1.2
-    # sslMinVersion: "1.2"
+  # If set to true then it will not store analytics for tags having prefix specified in the list.
+  # NB: Prefix “key-” is added in the list by default. This tag is added by gateway for keys.
+  ignoreTagPrefixList: []
 
-    # Name of the tls secret. A secret needs to be created for this manually using the name as specified here
-    # secretName: ""
+  # If enabled, it will store analytics for all the endpoints, irrespective of Track Endpoint plugin.
+  trackAllPaths: false
 
-    # Name of the volume where the secret will be mounted
-    # volumeName: ""
+  # If enabled, aggregate data will be generated per minute.
+  storeAnalyticsPerMinute: false   
 ```
 </details>
 </li>
 
 <li>
 <details>
-<summary>Global config: Added OAS Validate Examples</summary>
-
-Added field `global.oasValidateExamples`. When set to true, it enables validation of examples in the OAS spec. 
-It is used to set `TYK_DB_OAS_VALIDATE_EXAMPLES` and `TYK_GW_OAS_VALIDATE_EXAMPLES`.
+<summary>Tyk Control Plane: Added option to enable Dashboard hybrid organisation</summary>
+We've added a convenient option to enable dashboard hybrid organization during bootstrapping. This eliminates the manual step of calling the Dashboard Admin API post-deployment to enable hybrid organization, which is essential for MDCB deployment.
 </details>
 </li>
 
 <li>
 <details>
-<summary>Global config: Added OAS Validate Schema Defaults</summary>
-
-Added field `global.oasValidateSchemaDefaults`. When set to true, it enables validation of schema defaults in the OAS spec. 
-It is used to set `TYK_DB_OAS_VALIDATE_SCHEMA_DEFAULTS` and `TYK_GW_OAS_VALIDATE_SCHEMA_DEFAULTS`.
+<summary>Gateway/Pump: Enhanced Pod security with `runAsNonRoot`</summary>
+To harden security, we have added `runAsNonRoot: true` in the pod's securityContext. This prevents the Pods from running as root users, ensuring compatibility with the [*Restricted* Pod Security Policy](https://kubernetes.io/docs/concepts/security/pod-security-standards/#restricted).
 </details>
 </li>
 
 <li>
 <details>
-<summary>Global config: Enable/Disable key hashing</summary>
-
-Added field `global.hashKeys`. When set to true, it enables key hashing in Gateway. Dashboard will
-also operate in a mode that is compatible with key hashing. Please do not set `dashboard.hashKeys`
-or make sure `dashboard.hashKeys` is set to the same value or else `dashboard.hashKeys` will take precedence.
-
-Note: `dashboard.hashKeys` will be deprecated in future release.
+<summary>Gateway: Allow Gateway to be updated if secret value is updated</summary>
+We've introduced an annotation with a checksum of the secret as a value, triggering a deployment change when the secret is updated. This ensures that pods are replaced promptly, immediately utilizing the new values from the secret. This logic applies if `global.secrets.useSecretName` is not set, as the secret is then not part of the chart.
 </details>
 </li>
 
 <li>
 <details>
-<summary>Gateway: Added support for PodDisruptionBudget resource</summary>
-
-Added built-in support for [PodDisruptionBudget](https://kubernetes.io/docs/tasks/run-application/configure-pdb/) resource for Tyk Gateway. This will enhance the reliability and availability of your applications, giving you some control over the disruption caused by scaling operations, updates or maintenance on your pods. 
-To enable it, set `gateway.pdb.enabled` to `true` and configure `gateway.pdb.minAvailable` or `gateway.pdb.maxUnavailable`.
+<summary>Customizable Pod Labels Across All Components</summary>
+Now, you have the flexibility to customize podLabels in all component charts. Simply populate the `podLabels` field with your desired content, and it will be added as pod labels.
 </details>
 </li>
 
 <li>
 <details>
-<summary>Gateway: Added Ingress template for gateway control service</summary>
-
-When enabled at `gateway.control.ingress.enabled`, an Ingress resource will be created to allow external access to gateway's [control service]({{<ref "/planning-for-production#change-your-control-port">}}).
-</details>
-</li>
-
-<li>
-<details>
-<summary>Gateway: Configure Gateway to work with MDCB synchroniser</summary>
-
-Allow users to configure worker gateway to work with [Tyk MDCB synchroniser]({{<ref "product-stack/tyk-enterprise-mdcb/advanced-configurations/synchroniser">}}) easily by setting `global.mdcbSynchronizer.enabled` in `tyk-data-plane`.
-The control plane should be deployed with same `global.mdcbSynchronizer.enabled` value too.
-</details>
-</li>
-
-<li>
-<details>
-<summary>Gateway: Customise ServiceAccount to be used</summary>
-
-Allow users to customise `serviceAccountName` for gateway, the name of the [Service Account](https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/) that is going to be used by the Pods.
-</details>
-</li>
-
-<li>
-<details>
-<summary>Gateway: Make service port name configurable</summary>
-
-Users can configure Tyk Gateway service port name and Tyk Gateway control service port name. Default is `http`.
-</details>
-</li>
-
-<li>
-<details>
-<summary>Gateway: Make initContainer image configurable</summary>
-
-Users can configure Tyk Gateway initContainer image so that it is possible to load busybox image from preferred registry.
-</details>
-</li>
-
-<li>
-<details>
-<summary>Dashboard: Added option to enable Tyk Identity Broker (TIB) in Tyk Dashboard</summary>
-
-You can enable Internal [Tyk Identity Broker (TIB)]({{<ref "tyk-identity-broker">}}) in Tyk Dashboard by field `tyk-dashboard.tib.enabled` to `true`.
-</details>
-</li>
-
-<li>
-<details>
-<summary>Dashboard: Customise ServiceAccount to be used</summary>
-
-Allow users to customise `serviceAccountName` for dashboard, the name of the [Service Account](https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/) that is going to be used by the Pods.
-</details>
-</li>
-
-<li>
-<details>
-<summary>Dashboard: Make service port name configurable</summary>
-
-Users can configure Tyk Dashboard service port name. Default is `http`.
-</details>
-</li>
-
-<li>
-<details>
-<summary>Pump: Added Graph pump support</summary>
-
-[Graph Pumps]({{<ref "tyk-stack/tyk-pump/tyk-pump-configuration/graph-pump">}}) will be added when the user adds `mongo` or `postgres` to `pump.backend`. When `mongo` is added to `pump.backend` the Graph MongoDB Pump will be enabled. When `postgres` is added to `pump.backend` the Graph SQL Pump and Graph SQL Aggregate Pump will be enabled.
-</details>
-</li>
-
-<li>
-<details>
-<summary>Pump: Customise ServiceAccount to be used</summary>
-
-Allow users to customise `serviceAccountName` for pump, the name of the [Service Account](https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/) that is going to be used by the Pods.
-</details>
-</li>
-
-<li>
-<details>
-<summary>Pump: Make service port name configurable</summary>
-
-Users can configure Tyk Pump service port name. Default is `http`.
-</details>
-</li>
-
-<li>
-<details>
-<summary>Portal: Customise ServiceAccount to be used</summary>
-
-Allow users to customise `serviceAccountName` for portal, the name of the [Service Account](https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/) that is going to be used by the Pods.
-</details>
-</li>
-
-<li>
-<details>
-<summary>Portal: Make service port name configurable</summary>
-
-Users can configure Tyk Developer Portal service port name. Default is `http`.
-</details>
-</li>
-
-<li>
-<details>
-<summary>New component chart to deploy MDCB</summary>
-
-A new [MDCB component chart](https://github.com/TykTechnologies/tyk-charts/tree/main/components/tyk-mdcb) has been added to deploy MDCB. 
-It is currently in Beta. For installation instructions and configurations, please
-read [Tyk Control Plane chart]({{<ref "product-stack/tyk-charts/tyk-control-plane-chart">}}).
-</details>
-</li>
-
-<li>
-<details>
-<summary>New umbrella chart to deploy Tyk Control Plane</summary>
-
-A new [Tyk Control Plane umbrella chart](https://github.com/TykTechnologies/tyk-charts/tree/main/tyk-control-plane) has been added to deploy Tyk Control Plane. 
-It is currently in Beta. For installation instructions and configurations, please
-read [Tyk Control Plane chart]({{<ref "product-stack/tyk-charts/tyk-control-plane-chart">}}).
+<summary>Portal: Customizable Pod annotations in tyk-dev-portal</summary>
+We've added a `podAnnotations` field to the `tyk-dev-portal` chart, allowing you to customize pod annotations. Fill in the podAnnotations field with your specific content, and it will be added as pod annotations.
 </details>
 </li>
 
 </ul>
 
-  
 ##### Changed
 <!-- This should be a bullet-point list of updated features. Explain:
 
@@ -365,14 +240,50 @@ read [Tyk Control Plane chart]({{<ref "product-stack/tyk-charts/tyk-control-plan
 
 Each change log item should be expandable. The first line summarises the changelog entry. It should be then possible to expand this to reveal further details about the changelog item. This is achieved using HTML as shown in the example below. -->
 <ul>
+
 <li>
 <details>
-<summary>Global config: Update default MongoDB driver to `mongo-go`</summary>
-
-Tyk Charts 1.4.0 uses `mongo-go` as the default driver to connect to MongoDB. `mongo-go` driver is compatible with MongoDB 4.4.x and above. For MongoDB versions prior to 4.4, please change `global.mongo.driver` to `mgo`. We recommend reading [Choose a MongoDB driver]({{<ref "planning-for-production/database-settings/mongodb#choose-a-mongodb-driver">}}) when you need to change driver setting.
+<summary>Gateway/Pump: Removed the command in Gateway and Pump pod templates</summary>
+We've removed unnecessary commands from the Gateway and Pump pod templates, allowing for the utilization of entrypoint scripts.
 </details>
 </li>
+
+<li>
+<details>
+<summary>Dashboard: Allow arbitary image tags in tyk-dashboard</summary>
+Now, you can use arbitrary image tags, including non-Semantic Versioning tags like `latest` for Dashboard. We've bypassed version checking in the Dashboard Deployment template to accommodate this flexibility.
+</details>
+</li>
+
+
+<li>
+<details>
+<summary>Dashboard: Classic portal bootstrapping disabled by default</summary>
+To avoid confusion with the latest Developer Portal, Classic Portal bootstrapping is now disabled by default in the Dashboard. If you wish to utilize the Classic Portal, simply enable it by setting `tyk-bootstrap.bootstrap.portal` to `true` in either the Tyk Stack or Tyk Control Plane chart.
+</details>
+</li>
+
+<li>
+<details>
+<summary>Dashboard: Deprecation of `hashKeys` field</summary>
+The `dashboard.hashKeys` field is now deprecated. Instead, users should utilize the `global.hashKeys` field to set key hashing. This ensures configuration alignment across gateway, dashboard, and MDCB components.
+</details>
+</li>
+
 </ul>
+
+##### Fixed
+
+<ul>
+<li>
+<details>
+<summary>Global: Redis TLS version specification</summary>
+We've corrected a typo in the values.yaml file within the "global.redis" section. The fields `sslMinVersion` and `sslMaxVersion` have been updated to `tlsMinVersion` and `tlsMaxVersion`, respectively. This ensures accurate specification of the Redis TLS version for enhanced security.
+</details>
+</li>
+
+</ul>
+
 
 <!-- #### Security Fixes
 This section should be a bullet point list that should be included when any security fixes have been made in the release, e.g. CVEs. For CVE fixes, consideration needs to be made as follows:
