@@ -48,7 +48,7 @@ For Tyk Cloud users who want to deploy hybrid data planes, you can easily obtain
 ## Obtain Remote Control Plane Connection Details from tyk-control-plane Chart
 
 For Tyk Self-Managed MDCB users who want to deploy data planes, you can obtain MDCB connection details from the notes
-of tyk-control-plane installation output.
+of tyk-control-plane installation output, as listed below.
 
 ```
 === Tyk Control Plane Details ===
