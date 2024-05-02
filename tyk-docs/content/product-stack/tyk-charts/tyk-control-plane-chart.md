@@ -710,6 +710,12 @@ tyk-mdcb:
 
 To enable bootstrapping, set `global.components.bootstrap` to `true`. It would run [tyk-k8s-bootstrap](https://github.com/TykTechnologies/tyk-k8s-bootstrap) to bootstrap `tyk-control-plane` and to create Kubernetes secrets that can be utilised in Tyk Operator and Tyk Developer Portal.
 
+{{< note success >}}
+**Note**
+
+During bootstrapping, admin user needs to reset its password. It may be denied by Dashboard OPA rules if [OPA]({{<ref "/tyk-dashboard/open-policy-agent">}}) was enabled. Please disable OPA during the initial bootstrapping or set Dashboard configuration [TYK_DB_SECURITY_ALLOWADMINRESETPASSWORD]({{<ref "tyk-dashboard/configuration#securityallow_admin_reset_password">}}) to true.
+{{< /note >}}
+
 #### Bootstrapped Environments
 
 If Tyk is already bootstrapped, the application will bypass the creation of the Tyk Organisation and Admin User, proceeding directly with the creation of Kubernetes Secrets.
