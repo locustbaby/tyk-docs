@@ -118,7 +118,7 @@ At a minimum, modify values.yaml for the following settings:
 Consult the [Configuration](#configuration) section for the available configuration options and modify your local `values.yaml` file accordingly. Then install the chart by issuing the following command below:
 
 ```bash
-    helm install tyk-data-plane tyk-helm/tyk-data-plane -n tyk-dp --create-namespace -f values.yaml
+helm install tyk-data-plane tyk-helm/tyk-data-plane -n tyk-dp --create-namespace -f values.yaml
 ```
 
 ### Uninstalling the Chart
