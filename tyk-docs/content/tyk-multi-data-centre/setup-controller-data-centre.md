@@ -66,6 +66,10 @@ sudo yum install tyk-sink
 
 The [Tyk Control Plane]({{<ref "product-stack/tyk-charts/tyk-control-plane-chart">}}) helm chart is pre-configured to install Tyk control plane for multi data centre API management from a single Dashboard with the MDCB component.
 
+Below is a concise instruction on how to set up an MDCB Control Plane with Redis and PostgreSQL.
+
+To access the comprehensive installation instructions and configuration options, please see [Tyk Control Plane Helm Chart]({{<ref "product-stack/tyk-charts/tyk-control-plane-chart">}}).
+
 ### Prerequisites
 - [Kubernetes 1.19+](https://kubernetes.io/docs/setup/)
 - [Helm 3+](https://helm.sh/docs/intro/install/)
@@ -169,8 +173,6 @@ helm upgrade tyk-cp tyk-helm/tyk-control-plane -n $NAMESPACE \
 Now Tyk Dashboard and Tyk MDCB should be accessible through service `dashboard-svc-tyk-cp-tyk-dashboard` at port `3000` and `mdcb-svc-tyk-cp-tyk-mdcb` at port `9091` respectively. You can login to Dashboard using the admin email and password to start managing APIs.
 
 You can use the MDCB connection details included in the installation output, to install the [MDCB Data Plane]({{<ref "tyk-multi-data-centre/setup-worker-data-centres">}}).
-
-For the complete installation guide and configuration options, please see [Tyk Control Plane Helm Chart]({{<ref "product-stack/tyk-charts/tyk-control-plane-chart">}}).
 
 ## Configuration
 If you install MDCB component with package, modify your `/opt/tyk-sink/tyk_sink.conf` file as follows:
