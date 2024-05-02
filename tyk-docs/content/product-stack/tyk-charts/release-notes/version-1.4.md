@@ -224,7 +224,7 @@ Now, you have the flexibility to customize podLabels in all component charts. Si
 <li>
 <details>
 <summary>Portal: Customizable Pod annotations in tyk-dev-portal</summary>
-We've added a `podAnnotations` field to the `tyk-dev-portal` chart, allowing you to customize pod annotations. Fill in the podAnnotations field with your specific content, and it will be added as pod annotations.
+We've added a `podAnnotations` field to the `tyk-dev-portal` chart, allowing you to customize pod annotations. Fill in the `podAnnotations` field with your specific content, and it will be added as pod annotations.
 </details>
 </li>
 
