@@ -78,7 +78,7 @@ Given the time difference between your upgrade and the release of this version, 
 
 #### Deprecations
 <!-- Required. Use the following statement if there are no deprecations, or explain if there are -->
-- In `tyk-dashboard` chart, `dashboard.hashKeys` field is deprecated and be replaced with `.global.hashKeys`. This is to ensure Dashboard, Gateway, and MDCB always get the same hashKeys configurations. Setting `dashboard.hashKeys` will no longer take effect. Please only use `.global.hashKeys` field.
+- In the `tyk-dashboard` chart, the `dashboard.hashKeys` field is deprecated and has been replaced with `.global.hashKeys`. This is to ensure Dashboard, Gateway, and MDCB always get the same hashKeys configurations. Setting `dashboard.hashKeys` will no longer take effect. Please only use `.global.hashKeys` field.
 
 <!-- Optional section!
 Used to share and notify users about our plan to deprecate features, configs etc. 
