@@ -71,8 +71,8 @@ An example is given below for illustrative purposes only. Tested Versions and Co
 | [Kubernetes](https://kubernetes.io)                        | 1.26.x, 1.27.x, 1.28.x, 1.29.x | 1.19+          |          | 
 | [Helm](https://helm.sh)                                    | 3.14.x                 | 3.x                    |          | 
 | [Redis](https://redis.io)                                  | 6.2.x, 7.x    | 6.2.x, 7.x    | Used by Tyk Gateway and Dashboard | 
-| [MongoDB](https://www.mongodb.com/try/download/community)  | 5.0.x, 6.0.x, 7.0.x | 4.4.x, 5.0.x, 6.0.x, 7.0.x | Used by Tyk Dashboard | 
-| [PostgreSQL](https://www.postgresql.org/download/)         | 11.x - 15.x LTS        | 11.x - 15.x            | Used by Tyk Dashboard | 
+| [MongoDB](https://www.mongodb.com/try/download/community)  | 5.0.x, 6.0.x, 7.0.x | 4.4.x, 5.0.x, 6.0.x, 7.0.x | Used by Tyk Dashboard, Pump, and MDCB | 
+| [PostgreSQL](https://www.postgresql.org/download/)         | 11.x - 15.x LTS        | 11.x - 15.x            | Used by Tyk Dashboard, Pump, and MDCB | 
 
 Given the time difference between your upgrade and the release of this version, we recommend customers verify the ongoing support of third-party dependencies they install, as their status may have changed since the release.
 
@@ -103,7 +103,7 @@ helm upgrade [RELEASE_NAME] tyk-helm/[CHART_NAME]
 #### Release Highlights
 <!-- Required. Use similar ToV to previous release notes. For example for a patch release: -->
 
-##### GA release of tyk-control-plane chart and tyk-mdcb chart
+##### General availability release of tyk-control-plane chart and tyk-mdcb chart
 We're pleased to announce the official release of the Tyk Helm Charts for Tyk Control Plane and MDCB! Following a successful beta phase, these charts are now stable and ready for production use. 
 
 With this release, we aim to provide a straightforward solution for deploying and managing Tyk Control Plane and Multi-Data Center Bridge (MDCB) using Helm Charts. Whether you're looking for our recommended setup configurations or need flexibility to adapt to your architectural requirements, our Helm Charts have you covered.
@@ -148,7 +148,7 @@ Each change log item should be expandable. The first line summarises the changel
 
 <li>
 <details>
-<summary>OSS: Simplify Tyk Operator Setup with Kubernetes Secret Creation</summary>
+<summary>OSS: Simplify Tyk Operator setup with Kubernetes Secret creation</summary>
 
 When you set `operatorSecret.enabled` to `true` in the `tyk-oss` chart, a Kubernetes Secret named `tyk-operator-conf` will be automatically created in the same namespace. This secret is essential for connecting Tyk Operator to the Gateway, enabling seamless management of Tyk API resources. To learn more about setting up Tyk Operator, check out [Tyk Operator installation]({{<ref "tyk-stack/tyk-operator/installing-tyk-operator">}}).
 </details>
@@ -203,7 +203,7 @@ We've added a convenient option to enable dashboard hybrid organization during b
 <li>
 <details>
 <summary>Gateway/Pump: Enhanced Pod security with `runAsNonRoot`</summary>
-To harden security, we have added `runAsNonRoot: true` in the pod's securityContext. This prevents the Pods from running as root users, ensuring compatibility with the [*Restricted* Pod Security Policy](https://kubernetes.io/docs/concepts/security/pod-security-standards/#restricted).
+To harden security, we have added `runAsNonRoot: true` in the pod's `securityContext`. This prevents the Pods from running as root users, ensuring compatibility with the [*Restricted* Pod Security Policy](https://kubernetes.io/docs/concepts/security/pod-security-standards/#restricted).
 </details>
 </li>
 
@@ -217,7 +217,7 @@ We've introduced an annotation with a checksum of the secret as a value, trigger
 <li>
 <details>
 <summary>Customizable Pod Labels Across All Components</summary>
-Now, you have the flexibility to customize podLabels in all component charts. Simply populate the `podLabels` field with your desired content, and it will be added as pod labels.
+Now, you have the flexibility to customize Pod labels in all component charts. Simply populate the `podLabels` field with your desired content, and it will be added as pod labels.
 </details>
 </li>
 
@@ -266,7 +266,7 @@ To avoid confusion with the latest Developer Portal, Classic Portal bootstrappin
 <li>
 <details>
 <summary>Dashboard: Deprecation of `hashKeys` field</summary>
-The `dashboard.hashKeys` field is now deprecated. Instead, users should utilize the `global.hashKeys` field to set key hashing. This ensures configuration alignment across gateway, dashboard, and MDCB components.
+The `dashboard.hashKeys` field is now deprecated. Instead, users should utilize the `global.hashKeys` field to set key hashing. This ensures configuration alignment across Gateway, Dashboard, and MDCB components.
 </details>
 </li>
 
