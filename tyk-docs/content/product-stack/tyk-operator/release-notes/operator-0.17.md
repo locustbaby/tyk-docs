@@ -10,6 +10,57 @@ description: "Release notes documenting updates, enhancements, fixes and changes
 ## Support Lifetime
 Our minor releases are supported until our next minor comes out. 
 
+## 0.17.1 Release Notes
+
+##### Release date XX May 2024
+
+#### Breaking Changes
+This release has no breaking changes.
+
+#### Deprecations
+There are no deprecations in this release.
+
+#### Upgrade Instructions
+Go to the [Upgrading Tyk Operator]({{<ref "tyk-stack/tyk-operator/installing-tyk-operator#upgrading-tyk-operator">}}) section for detailed upgrade Instructions.
+
+#### Release Highlights
+This release is focused on bug fixes. For details please refer to the [changelog]({{< ref "#Changelog-v0.17.1">}}) below.
+
+#### Downloads
+- [Docker image v0.17](https://hub.docker.com/r/tykio/tyk-operator/tags?page=&page_size=&ordering=&name=v0.17.1)
+  - ```bash
+    docker pull tykio/tyk-operator:v0.17.1
+    ```
+- Source code tarball - [Tyk Operator Repo](https://github.com/TykTechnologies/tyk-operator/releases/tag/v0.17.1)
+
+#### Changelog {#Changelog-v0.17.1}
+
+##### Fixed
+
+<ul>
+<li>
+<details>
+<summary>Fixed Operator doesn't prefix a certificate with the orgid when retrieving certificates to use with an ingress </summary>
+
+</details>
+</li>
+
+<li>
+<details>
+<summary>Reference helm values in webhook and controller manager services </summary>
+
+</details>
+</li>
+
+<li>
+<details>
+<summary>Fixed: CVE </summary>
+
+</details>
+</li>
+</ul>
+
+
 ## 0.17.0 Release Notes
 
 ##### Release date 05 Apr 2024
