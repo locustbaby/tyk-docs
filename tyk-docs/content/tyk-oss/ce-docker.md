@@ -30,7 +30,7 @@ docker network create tyk
 
 **Step 2 - Deploy Redis into the network, with the `6379` port open**
 
-```console
+```bash
 docker run -itd --rm --name tyk-redis --network tyk -p 127.0.0.1:6379:6379 redis:4.0-alpine
 ```
 
