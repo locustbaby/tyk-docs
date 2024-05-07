@@ -36,7 +36,7 @@ docker run -itd --rm --name tyk-redis --network tyk -p 127.0.0.1:6379:6379 redis
 
 **Step 3 - Next, let's download a JSON `tyk.conf` configuration file**
 
-```console
+```bash
 wget https://raw.githubusercontent.com/TykTechnologies/tyk-gateway-docker/master/tyk.standalone.conf
 ```
 
