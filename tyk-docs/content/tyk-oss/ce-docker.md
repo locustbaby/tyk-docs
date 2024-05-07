@@ -24,7 +24,7 @@ The following are required for a Tyk OSS installation:
 
 **Step 1 - Create a network**
 
-```console
+```bash
 docker network create tyk
 ```
 
