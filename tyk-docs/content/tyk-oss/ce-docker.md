@@ -42,7 +42,7 @@ wget https://raw.githubusercontent.com/TykTechnologies/tyk-gateway-docker/master
 
 **Step 4 - Run the Gateway, mounting the conf file into the container**
 
-```console
+```bash
 docker run \
   --name tyk_gateway \
   --network tyk \
